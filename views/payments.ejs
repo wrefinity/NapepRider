@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('header') %>
+
+  <body class="">
+    <div class="wrapper">
+      <%- include("sidebar") %>
+
+        <div class="main-panel">
+          <%- include("navbar") %>
+            <div class="content">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card card-chart">
+                    <div class="card-header ">
+
+                      <div class="row mt-5">
+
+                        <div class="col-lg-12 col-md-12">
+                          <div class="card ">
+                            <div class="card-header" style="background-color: #ae9400;">
+                              <h4 class="card-title"> VIEW PAYMENT RECORDS</h4>
+                            </div>
+                            <% if(records != null){ -%>
+                              <div class="card-body">
+                                <div class="table-responsive">
+                                  <table class="table tablesorter " id="">
+                                    <thead class=" text-primary">
+                                      <tr>
+
+                                        <th class="text-center">
+                                          Name
+                                        </th>
+                                        <th>
+                                          Amount
+                                        </th>
+                                        <th>
+                                          Month
+                                        </th>
+                                        <th>
+                                          Year
+                                        </th>
+                                        <th>
+                                          Controls
+                                        </th>
+
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <% records.forEach( rec=> { -%>
+                                        <tr>
+                                          <td>
+                                            <%= rec.fullname %>
+                                          </td>
+                                          <td>
+                                            <%= rec.amount %>
+                                          </td>
+                                          <td>
+                                            <%= rec.month %>
+                                          </td>
+                                          <td>
+                                            <%= rec.year %>
+                                          </td>
+                                          <td>
+
+                                            <a href="/admin/payments_single/<%= rec._id %>">
+                                              <button type="button" rel="tooltip" title="" class="btn btn-link"
+                                                data-original-title="Decrypt">
+                                                <i class="tim-icons icon-pencil"></i>
+                                                view
+                                              </button>
+                                            </a>
+                                          </td>
+
+                                        </tr>
+                                        <% }) %>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <% } else { -%>
+                                <h6>No record captured yet</h6>
+                                <% } -%>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <%- include('footer') %>
+        </div>
+    </div>
+    <%- include("plugin") %>
+      <%- include("scripter") %>
+        <script>
+
+          const cancelButton = () => {
+            setTimeout(() => {
+
+              errorsClass.style.visibility = "hidden";
+              successMsg.style.visibility = "hidden";
+            }, 10000)
+          }
+
+
+          const successFunc = (mess) => {
+            successMsg.style.visibility = "visible";
+            successMsg.textContent = mess
+            cancelButton()
+            return
+          }
+
+          const errorFunc = (mess) => {
+            errorsClass.style.visibility = "visible";
+            errorsClass.textContent = mess
+            cancelButton()
+            return
+          }
+          const refreshFunc = () => {
+            setTimeout(function () { window.location.reload() }, 4000)
+          }
+        </script>
+
+        <script>
+          let form = document.querySelector('form')
+          const errorsClass = document.querySelector('.errors')
+          const successMsg = document.querySelector('.successMsg')
+          const inputFile = document.getElementById('filex');
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const firstname = form.firstname.value.trim();
+            const surname = form.surname.value.trim();
+            const email = form.email.value.trim();
+            const phone = form.phone.value.trim();
+            const nextOfKin = form.nextOfKin.value.trim();
+            const gender = form.gender.value.trim();
+            const maritalStatus = form.maritalStatus.value.trim();
+            const address = form.address.value.trim();
+            const stateOrigin = form.stateOrigin.value.trim();
+            const bloodGroup = form.bloodGroup.value.trim();
+            const disability = form.disability.value.trim();
+            const localGovtOrigin = form.localGovtOrigin.value.trim();
+            const passporty = document.getElementById("passport");
+
+            const formData = new FormData();
+            formData.append('firstname', firstname)
+            formData.append('surname', surname)
+            formData.append('email', email)
+            formData.append('phone', phone)
+            formData.append('gender', gender)
+            formData.append('maritalStatus', maritalStatus)
+            formData.append('nextOfKin', nextOfKin)
+            formData.append('bloodGroup', bloodGroup)
+            formData.append('disability', disability)
+            formData.append('address', address)
+            formData.append('stateOrigin', stateOrigin)
+            formData.append('localGovtOrigin', localGovtOrigin)
+            formData.append('passport', passporty.files[0])
+            try {
+              console.log(formData)
+              const response = await fetch("/admin/records", {
+                body: formData,
+                method: "POST",
+                'Content-Type': "multipart/form-data"
+              })
+              const data = await response.json()
+              if (data.rec) {
+                successFunc(` record was captured successfully `)
+                refreshFunc()
+              }
+
+              if (data.mess) {
+                errorFunc(` error ${data.mess}`)
+              }
+
+            } catch (e) {
+
+            }
+          })
+
+        </script>
+  </body>
+
+</html>

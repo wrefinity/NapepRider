@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('header') %>
+
+  <!-- rgb(246, 92, 92); -->
+
+  <body class="" style="background-color: rgb(255, 255, 255);">
+    <%- include("navindex") %>
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-12">
+            <div class="card card-chart" style="
+              background-image: url('/assets/img/header.png');
+              width:100%;
+              height:100%;
+              background-size: cover;
+              ">
+              <div class="card-header ">
+                <div class="row">
+                  <div class="col-sm-3 ">
+
+                  </div>
+                  <div class="col-sm-6">
+                    <h3 class="text-center ">
+                      PLEASE LOGIN
+                    </h3>
+                    <form>
+
+
+                      <div class="input-group mb-3">
+                        <input type="text" class="form-control" name="email" placeholder="Your Email">
+                        <div class="input-group-append">
+                          <span class="input-group-text bg-transparent">@example.com</span>
+                        </div>
+                        <div class="emailError" style="color: red;"></div>
+                      </div>
+
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">Password</span>
+                        </div>
+                        <input type="password" name="password" class="form-control" placeholder="please enter password">
+                        <div class="passwordError" style="color: red;"></div>
+                      </div>
+
+                      <div>
+                        <button type="submit" class="btn btn-primary justify-content-center">Submit</button>
+
+                        <!-- <div class="mt-4">
+                          not registered kindly<h3> <a href="/users/register" style="color:#a60600;">Register</a></h3>
+                        </div> -->
+
+                      </div>
+
+                    </form>
+                  </div>
+                  <div class="col-sm-3 ">
+
+                  </div>
+
+                </div>
+              </div>
+              <div class="card-body" style="background-color: #fee65a;;">
+                <img src="/assets/img/keken.png" alt="" style="width:350px;
+          height:250px;">
+                <img src="/assets/img/keken.png" alt="" style="width:350px;
+          height:250px;">
+                <img src="/assets/img/keken.png" alt="" style="width:350px;
+          height:250px;">
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="">
+        <div class="">
+          <div class="content" style="
+          background-image: url('/assets/img/keken.png');
+          width:100%;
+          height:100%;
+          background-size: cover;">
+
+
+
+
+
+          </div>
+        </div>
+      </div>
+
+      <%- include("scripter") %>
+        <%- include('footer') %>
+
+          <script>
+
+            const form = document.querySelector("form")
+            let emailError = document.querySelector('div.emailError')
+            let passwordError = document.querySelector('div.passwordError')
+
+            form.addEventListener("submit", async (e) => {
+              e.preventDefault()
+              emailError.textContent = '';
+              passwordError.textContent = '';
+
+              const email = form.email.value;
+              const password = form.password.value;
+
+              try {
+                const response = await fetch("/users/login", {
+                  method: "POST",
+                  body: JSON.stringify({ email, password }),
+                  headers: { "Content-Type": "application/json" }
+                })
+
+                const data = await response.json()
+                console.log(data)
+
+                if (data.user) {
+                  window.location.assign('/admin/dash')
+                }
+
+                if (data.error) {
+                  emailError.textContent = data.error.email
+                  passwordError.textContent = data.error.password
+                }
+
+              } catch (err) {
+
+              }
+
+            })
+
+          </script>
+  </body>
+
+</html>

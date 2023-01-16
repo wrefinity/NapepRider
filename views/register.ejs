@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('header') %>
+
+<!-- rgb(246, 92, 92); -->
+
+<body class="" style="background-color: rgb(246, 131, 131);">
+    <%- include("navindex") %>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12"
+            
+            >
+              <div class="card card-chart"
+              style="
+              background-image: url('/assets/img/encrypt.png');
+              width:100%;
+              height:100%;
+              background-size: cover;
+              "
+              >
+                <div class="card-header ">
+                  <div class="row">
+                    <div class="col-sm-3 ">
+                      
+                    </div>
+                    <div class="col-sm-6">
+                      <h3 class="text-center ">
+                        REGISTER SYSTEM
+                      </h3> 
+                      <form>
+                        
+                      
+                        <div class="input-group mb-3">
+                          <input type="text" class="form-control"  name="email"  placeholder="Your Email">
+                          <div class="input-group-append">
+                            <span class="input-group-text bg-transparent">@example.com</span>
+                          </div>
+                          <div class="emailError" style="color: red;"></div>
+                
+                        </div>
+                        <div class="input-group mb-3">
+                          <input type="text" class="form-control"  name="username" required placeholder="Enter Fullname">
+                          <div class="input-group-append">
+                            <span class="input-group-text bg-transparent">Sarah Wills</span>
+                          </div>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Password</span>
+                            </div>
+                            <input type="password" name="password" class="form-control" placeholder="please enter password">
+                            <div class="passwordError"style="color: red;"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success justify-content-center">Submit</button>
+
+                        <div class="mt-4">
+                          <h3> <a href="/" style="color:#a60600;">Login</a></h3>
+                        </div>
+                      </form>
+                    </div>
+                    <div class="col-sm-3 ">
+                      
+                    </div>
+                   
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="chart-area">
+                    <canvas id="chartBig1"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    </div>
+  <div class="">
+      <div class="">
+      <div class="content">
+        
+  
+       
+      </div>
+    </div>
+  </div>
+
+  <%- include("scripter") %>
+  <%- include('footer') %>
+
+  <script>
+
+    const form = document.querySelector("form")
+    let emailError = document.querySelector('div.emailError')
+    let passwordError = document.querySelector('div.passwordError')
+
+    form.addEventListener("submit", async(e)=>{
+      e.preventDefault()
+      emailError.textContent = '';
+      passwordError.textContent = '';
+
+      const email = form.email.value;
+      const password = form.password.value;
+      const username = form.username.value;
+
+      try{
+        console.log('i run')
+        const response = await fetch("/users/register", {
+          method:"POST",
+          body: JSON.stringify({email, password, username}),
+          headers: {"Content-Type": "application/json"}
+        })
+
+        const data = await response.json()
+        console.log(data)
+
+        if (data.user){
+            window.location.assign('/admin/dash')
+        }
+
+        if(data.error){
+            emailError.textContent = data.error.email
+            passwordError.textContent = data.error.password
+        }
+
+      }catch(err){
+
+      }
+
+    })
+
+   </script>
+</body>
+
+</html>

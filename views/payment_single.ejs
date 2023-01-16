@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('header') %>
+
+
+  <body class="">
+    <div class="wrapper">
+      <%- include("sidebar") %>
+
+        <div class="main-panel">
+          <%- include("navbar") %>
+            <div class="content">
+              <div class="row">
+                <div class="col-12">
+                  <div class="card card-chart">
+                    <div class="card-header ">
+                      <div class="row">
+                        <div class="col-sm-6 text-left">
+                          <h5 class="card-category">Payments </h5>
+                          <h2 class="card-title">Rider's Information </h2>
+                        </div>
+                        <div class="col-sm-6">
+
+                        </div>
+
+                        <div class="row mt-5">
+                          <div class="errors">
+                            <!-- <button class="cancelError" onclick="cancelButton()"> &times; </button> -->
+                          </div>
+                          <div class="successMsg">
+                          </div>
+
+                          <div class="col-md-12 ml-5">
+
+                            <div class="card card-body  p-4" style="background-color: #ab9200;;">
+                              <div class="card-body text-center">
+                                <h3 style="text-transform: uppercase;">
+                                  Fullname: <%= records.firstname %>
+                                </h3>
+                                <h3 style="text-transform: uppercase;">
+                                  <img src="/assets/img/<%= records.qrcode %>" style="height:300px; width:400px" />
+                                </h3>
+                              </div>
+                              <div class="card-body">
+                                <h5>
+                                  Amount: <%= records.amount %>
+                                </h5>
+                                <h5>
+                                  Month: <%= records.month %>
+                                    Year: <%= records.year %>
+                                </h5>
+
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <%- include('footer') %>
+        </div>
+    </div>
+    <%- include("plugin") %>
+      <%- include("scripter") %>
+
+        <script>
+
+
+          const cancelButton = () => {
+            setTimeout(() => {
+
+              errorsClass.style.visibility = "hidden";
+              successMsg.style.visibility = "hidden";
+            }, 10000)
+          }
+
+
+          const successFunc = (mess) => {
+            successMsg.style.visibility = "visible";
+            successMsg.textContent = mess
+            cancelButton()
+            return
+          }
+
+          const errorFunc = (mess) => {
+            errorsClass.style.visibility = "visible";
+            errorsClass.textContent = mess
+            cancelButton()
+            return
+          }
+          const refreshFunc = () => {
+            setTimeout(function () { window.location.reload() }, 4000)
+          }
+        </script>
+
+        <script>
+          let form = document.querySelector('form')
+          const errorsClass = document.querySelector('.errors')
+          const successMsg = document.querySelector('.successMsg')
+
+          form.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const name = form.fullname.value;
+            const labResult = form.labResult.value;
+            const patId = form.patId.value;
+
+
+            try {
+
+              const response = await fetch("/admin/add_patient_sys", {
+                body: JSON.stringify({ name, patId, labResult }),
+                headers: { "Content-Type": "application/json" },
+                method: "POST"
+              })
+              const data = await response.json()
+              if (data.info) {
+                successFunc(` ${data.info.name} data was captured successfully `)
+                refreshFunc()
+              }
+
+              if (data.mess) {
+                errorFunc(` error ${data.mess}`)
+              }
+
+            } catch (e) {
+
+            }
+          })
+
+        </script>
+  </body>
+
+</html>

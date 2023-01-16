@@ -1,0 +1,47 @@
+<div class="sidebar" style="background-color: #ab9200;">
+
+    <div class="sidebar-wrapper">
+        <div class="logo">
+            <!-- <a href="javascript:void(0)" class="simple-text logo-mini">
+        VP
+    </a> -->
+            <a href="javascript:void(0)" class="simple-text logo-normal">
+                <p style="font-size: 12px;">
+                    <%= locals.user.username %> Menu
+                </p>
+            </a>
+        </div>
+        <ul class="nav">
+            <li class="active ">
+                <a href="/admin/dash">
+                    <i class="tim-icons icon-chart-pie-36"></i>
+                    <p>Dashboard</p>
+                </a>
+            </li>
+
+
+            <% if(locals.user !=null) { -%>
+
+                <li>
+                    <a href="/admin/records">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>Register Rider </p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/payments">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>Riders Payments</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="/admin/records">
+                        <i class="tim-icons icon-single-02"></i>
+                        <p>View Records </p>
+                    </a>
+                </li>
+
+                <% } -%>
+        </ul>
+    </div>
+</div>
