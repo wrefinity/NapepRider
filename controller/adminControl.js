@@ -117,7 +117,7 @@ class RecordRepo {
   getPayment = async (req, res) => {
     try {
       const records = await Payments.find({});
-      return res.render("payments", { records });
+      return res.render("payments", { records: records });
     } catch (e) {
       return res.render("payments", { records: {} });
     }
@@ -125,16 +125,17 @@ class RecordRepo {
   createPayment = async (req, res) => {
     try {
       const { recordId, amount, fullname, month, year } = req.body;
-      const rec = Payments.create({
+      const rec = await Payments.create({
         recordId,
         amount,
         fullname,
         month,
         year,
       });
+      console.log("recorders:", rec);
 
-      if (rec) return res.render("payments");
-      return res.json({ mess: "Oop something went wrong !!!" });
+      rec && res.json({ info: rec });
+      res.json({ mess: "Oop something went wrong !!!" });
     } catch (e) {
       console.log(e);
     }
